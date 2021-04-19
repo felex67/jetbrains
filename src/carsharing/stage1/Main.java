@@ -8,15 +8,21 @@ import java.sql.Statement;
 public class Main {
     public static void main(String[] args) throws Exception {
         try {
-            System.out.print("Init Database ...");
-            Connection conn = InitDatabase.connect(args.length > 1 ? args[1] : "");
+            String dbname = "carsharing";
+            if (args.length > 1 && 0 == args[1].compareTo("-databaseFileName")) {
+                dbname = args[2];
+            }
+            //System.out.print("Init Database '" + dbname + "' ... ");
+            Connection conn = InitDatabase.connect(dbname);
             conn.setAutoCommit(true);
             Statement stmt = conn.createStatement();
             InitDatabase.createTableCompany(stmt, "company");
             stmt.close();
             conn.close();
-            System.out.println(" OK");
+            //System.out.println("OK");
         } catch (SQLException e) {
+            System.err.println("SQLException: " + e.toString());
+        } catch (Exception e) {
             System.err.println("Exception: " + e.toString());
         }
     }
